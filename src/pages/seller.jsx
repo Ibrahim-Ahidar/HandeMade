@@ -29,131 +29,14 @@ ChartJS.register(
   Filler
 );
 
-function Seller() {
-  const [activeTab, setActiveTab] = useState("dashboard");
-
-  // Mock data for dashboard
-  const [stats] = useState({
-    totalSales: 12450.75,
-    totalOrders: 89,
-    totalProducts: 15,
-    totalRevenue: 15680.25,
-    monthlyGrowth: 23.5,
-    weeklyGrowth: 8.2,
-  });
-
-  const [topProducts] = useState([
-    {
-      id: 1,
-      name: "Handmade Ceramic Vase",
-      sales: 45,
-      revenue: 675.0,
-      target: 50,
-      category: "Pottery",
-    },
-    {
-      id: 2,
-      name: "Artisan Wooden Bowl",
-      sales: 38,
-      revenue: 570.0,
-      target: 40,
-      category: "Woodwork",
-    },
-    {
-      id: 3,
-      name: "Macrame Wall Hanging",
-      sales: 32,
-      revenue: 480.0,
-      target: 35,
-      category: "Textiles",
-    },
-    {
-      id: 4,
-      name: "Leather Wallet",
-      sales: 28,
-      revenue: 420.0,
-      target: 30,
-      category: "Leather",
-    },
-  ]);
-
-  const [recentOrders] = useState([
-    {
-      id: "ORD-001",
-      customer: "Sarah Johnson",
-      product: "Handmade Ceramic Vase",
-      quantity: 2,
-      total: 45.0,
-      status: "Completed",
-      date: "2024-01-15",
-    },
-    {
-      id: "ORD-002",
-      customer: "Mike Chen",
-      product: "Artisan Wooden Bowl",
-      quantity: 1,
-      total: 35.0,
-      status: "Processing",
-      date: "2024-01-14",
-    },
-    {
-      id: "ORD-003",
-      customer: "Emma Wilson",
-      product: "Macrame Wall Hanging",
-      quantity: 1,
-      total: 28.0,
-      status: "Shipped",
-      date: "2024-01-13",
-    },
-    {
-      id: "ORD-004",
-      customer: "David Brown",
-      product: "Leather Wallet",
-      quantity: 3,
-      total: 75.0,
-      status: "Completed",
-      date: "2024-01-12",
-    },
-  ]);
-
-  const [monthlyData] = useState([
-    { month: "Jul", sales: 1200, orders: 12 },
-    { month: "Aug", sales: 1450, orders: 15 },
-    { month: "Sep", sales: 1800, orders: 18 },
-    { month: "Oct", sales: 2100, orders: 22 },
-    { month: "Nov", sales: 1950, orders: 20 },
-    { month: "Dec", sales: 2350, orders: 24 },
-  ]);
-
-  // Form data for selling
-  const [formData, setFormData] = useState({
-    productName: "",
-    description: "",
-    price: "",
-    originalPrice: "",
-    category: "",
-    stock: "",
-    tags: "",
-    images: null,
-  });
-
-  const [errors, setErrors] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Completed":
-        return "bg-green-900/30 text-green-300 border-green-500/50";
-      case "Processing":
-        return "bg-yellow-900/30 text-yellow-300 border-yellow-500/50";
-      case "Shipped":
-        return "bg-blue-900/30 text-blue-300 border-blue-500/50";
-      default:
-        return "bg-gray-900/30 text-gray-300 border-gray-500/50";
-    }
-  };
-
+// Moved outside to prevent re-creation on every render
+const DashboardContent = ({
+  stats,
+  topProducts,
+  recentOrders,
+  monthlyData,
+  getStatusColor,
+}) => {
   // Chart configurations
   const monthlySalesChartData = {
     labels: monthlyData.map((d) => d.month),
@@ -334,92 +217,7 @@ function Seller() {
     },
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prev) => ({
-        ...prev,
-        images: file,
-      }));
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.productName.trim()) {
-      newErrors.productName = "Product name is required";
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
-    } else if (formData.description.trim().length < 20) {
-      newErrors.description = "Please provide at least 20 characters";
-    }
-
-    if (!formData.price) {
-      newErrors.price = "Price is required";
-    } else if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-      newErrors.price = "Please enter a valid price";
-    }
-
-    if (!formData.category) {
-      newErrors.category = "Please select a category";
-    }
-
-    if (!formData.stock) {
-      newErrors.stock = "Stock quantity is required";
-    } else if (isNaN(formData.stock) || parseInt(formData.stock) < 0) {
-      newErrors.stock = "Please enter a valid stock quantity";
-    }
-
-    return newErrors;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = validateForm();
-
-    if (Object.keys(newErrors).length === 0) {
-      console.log("Product listed:", formData);
-      setIsSubmitted(true);
-      setFormData({
-        productName: "",
-        description: "",
-        price: "",
-        originalPrice: "",
-        category: "",
-        stock: "",
-        tags: "",
-        images: null,
-      });
-      setImagePreview(null);
-      setTimeout(() => setIsSubmitted(false), 5000);
-    } else {
-      setErrors(newErrors);
-    }
-  };
-
-  const DashboardContent = () => (
+  return (
     <div className="space-y-4 md:space-y-8">
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
@@ -667,281 +465,498 @@ function Seller() {
       </div>
     </div>
   );
+};
 
-  const SellContent = () => (
-    <div className="max-w-3xl mx-auto">
-      {/* Product Listing Form */}
-      <div className="bg-white/5 backdrop-blur-sm rounded-lg shadow-lg p-4 md:p-8 border border-white/10">
-        <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
-          Add New Product
-        </h2>
+const SellContent = ({
+  formData,
+  handleChange,
+  handleImageChange,
+  handleSubmit,
+  errors,
+  isSubmitted,
+  imagePreview,
+}) => (
+  <div className="max-w-3xl mx-auto">
+    {/* Product Listing Form */}
+    <div className="bg-white/5 backdrop-blur-sm rounded-lg shadow-lg p-4 md:p-8 border border-white/10">
+      <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
+        Add New Product
+      </h2>
 
-        {isSubmitted && (
-          <div className="mb-4 md:mb-6 p-3 md:p-4 bg-green-900/30 border border-green-500/50 text-green-300 rounded-lg backdrop-blur-sm text-sm md:text-base">
-            ✓ Success! Your product has been listed and is now live on the
-            marketplace!
-          </div>
-        )}
+      {isSubmitted && (
+        <div className="mb-4 md:mb-6 p-3 md:p-4 bg-green-900/30 border border-green-500/50 text-green-300 rounded-lg backdrop-blur-sm text-sm md:text-base">
+          ✓ Success! Your product has been listed and is now live on the
+          marketplace!
+        </div>
+      )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-          {/* Product Image */}
-          <div>
-            <label className="block text-xs md:text-sm font-semibold text-white mb-2">
-              Product Image *
-            </label>
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4">
-              <label htmlFor="images" className="cursor-pointer">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg border-2 border-dashed border-white/30 hover:border-white/50 flex items-center justify-center bg-white/5 overflow-hidden transition-all">
-                  {imagePreview ? (
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="text-center">
-                      <div className="text-2xl md:text-3xl mb-1">📸</div>
-                      <p className="text-xs text-gray-400">Upload</p>
-                    </div>
-                  )}
-                </div>
-              </label>
-              <input
-                type="file"
-                id="images"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-              <p className="text-xs md:text-sm text-gray-300">
-                Upload a clear image of your product. JPG, PNG accepted.
-              </p>
-            </div>
-          </div>
-
-          {/* Product Name */}
-          <div>
-            <label
-              htmlFor="productName"
-              className="block text-xs md:text-sm font-semibold text-white mb-2"
-            >
-              Product Name *
+      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        {/* Product Image */}
+        <div>
+          <label className="block text-xs md:text-sm font-semibold text-white mb-2">
+            Product Image *
+          </label>
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4">
+            <label htmlFor="images" className="cursor-pointer">
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-lg border-2 border-dashed border-white/30 hover:border-white/50 flex items-center justify-center bg-white/5 overflow-hidden transition-all">
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-center">
+                    <div className="text-2xl md:text-3xl mb-1">📸</div>
+                    <p className="text-xs text-gray-400">Upload</p>
+                  </div>
+                )}
+              </div>
             </label>
             <input
-              type="text"
-              id="productName"
-              name="productName"
-              value={formData.productName}
-              onChange={handleChange}
-              className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
-                errors.productName
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-white/20 focus:ring-white/40"
-              }`}
-              placeholder="e.g., Handmade Ceramic Vase"
+              type="file"
+              id="images"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
             />
-            {errors.productName && (
-              <p className="text-red-400 text-xs md:text-sm mt-1">
-                {errors.productName}
-              </p>
-            )}
-          </div>
-
-          {/* Description */}
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-xs md:text-sm font-semibold text-white mb-2"
-            >
-              Product Description *
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows="4"
-              className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
-                errors.description
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-white/20 focus:ring-white/40"
-              }`}
-              placeholder="Describe your product, materials used, and what makes it special..."
-            ></textarea>
-            {errors.description && (
-              <p className="text-red-400 text-xs md:text-sm mt-1">
-                {errors.description}
-              </p>
-            )}
-            <p className="text-xs text-gray-400 mt-1">Minimum 20 characters</p>
-          </div>
-
-          {/* Price Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-            <div>
-              <label
-                htmlFor="price"
-                className="block text-xs md:text-sm font-semibold text-white mb-2"
-              >
-                Price (USD) *
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                id="price"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
-                  errors.price
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-white/20 focus:ring-white/40"
-                }`}
-                placeholder="29.99"
-              />
-              {errors.price && (
-                <p className="text-red-400 text-xs md:text-sm mt-1">
-                  {errors.price}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="originalPrice"
-                className="block text-xs md:text-sm font-semibold text-white mb-2"
-              >
-                Original Price (Optional)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                id="originalPrice"
-                name="originalPrice"
-                value={formData.originalPrice}
-                onChange={handleChange}
-                className="w-full p-2 md:p-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/40 text-white placeholder-gray-500 text-sm md:text-base"
-                placeholder="39.99"
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                For showing discounts
-              </p>
-            </div>
-          </div>
-
-          {/* Category and Stock Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-            <div>
-              <label
-                htmlFor="category"
-                className="block text-xs md:text-sm font-semibold text-white mb-2"
-              >
-                Category *
-              </label>
-              <select
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white text-sm md:text-base ${
-                  errors.category
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-white/20 focus:ring-white/40"
-                }`}
-              >
-                <option value="" className="bg-gray-900">
-                  Select category
-                </option>
-                <option value="jewelry" className="bg-gray-900">
-                  Jewelry
-                </option>
-                <option value="pottery" className="bg-gray-900">
-                  Pottery
-                </option>
-                <option value="textiles" className="bg-gray-900">
-                  Textiles
-                </option>
-                <option value="woodwork" className="bg-gray-900">
-                  Woodwork
-                </option>
-                <option value="leather" className="bg-gray-900">
-                  Leather Goods
-                </option>
-                <option value="paintings" className="bg-gray-900">
-                  Paintings
-                </option>
-                <option value="mixed-materials" className="bg-gray-900">
-                  Mixed Materials
-                </option>
-              </select>
-              {errors.category && (
-                <p className="text-red-400 text-xs md:text-sm mt-1">
-                  {errors.category}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="stock"
-                className="block text-xs md:text-sm font-semibold text-white mb-2"
-              >
-                Stock Quantity *
-              </label>
-              <input
-                type="number"
-                id="stock"
-                name="stock"
-                value={formData.stock}
-                onChange={handleChange}
-                className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
-                  errors.stock
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-white/20 focus:ring-white/40"
-                }`}
-                placeholder="10"
-              />
-              {errors.stock && (
-                <p className="text-red-400 text-xs md:text-sm mt-1">
-                  {errors.stock}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Tags */}
-          <div>
-            <label
-              htmlFor="tags"
-              className="block text-xs md:text-sm font-semibold text-white mb-2"
-            >
-              Tags (Optional)
-            </label>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              value={formData.tags}
-              onChange={handleChange}
-              className="w-full p-2 md:p-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/40 text-white placeholder-gray-500 text-sm md:text-base"
-              placeholder="handmade, ceramic, unique, gift"
-            />
-            <p className="text-xs text-gray-400 mt-1">
-              Separate tags with commas
+            <p className="text-xs md:text-sm text-gray-300">
+              Upload a clear image of your product. JPG, PNG accepted.
             </p>
           </div>
+        </div>
 
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full py-3 md:py-4 text-base md:text-lg"
+        {/* Product Name */}
+        <div>
+          <label
+            htmlFor="productName"
+            className="block text-xs md:text-sm font-semibold text-white mb-2"
           >
-            List Product Now
-          </Button>
-        </form>
-      </div>
+            Product Name *
+          </label>
+          <input
+            type="text"
+            id="productName"
+            name="productName"
+            value={formData.productName}
+            onChange={handleChange}
+            className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
+              errors.productName
+                ? "border-red-500 focus:ring-red-500"
+                : "border-white/20 focus:ring-white/40"
+            }`}
+            placeholder="e.g., Handmade Ceramic Vase"
+          />
+          {errors.productName && (
+            <p className="text-red-400 text-xs md:text-sm mt-1">
+              {errors.productName}
+            </p>
+          )}
+        </div>
+
+        {/* Description */}
+        <div>
+          <label
+            htmlFor="description"
+            className="block text-xs md:text-sm font-semibold text-white mb-2"
+          >
+            Product Description *
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            rows="4"
+            className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
+              errors.description
+                ? "border-red-500 focus:ring-red-500"
+                : "border-white/20 focus:ring-white/40"
+            }`}
+            placeholder="Describe your product, materials used, and what makes it special..."
+          ></textarea>
+          {errors.description && (
+            <p className="text-red-400 text-xs md:text-sm mt-1">
+              {errors.description}
+            </p>
+          )}
+          <p className="text-xs text-gray-400 mt-1">Minimum 20 characters</p>
+        </div>
+
+        {/* Price Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <div>
+            <label
+              htmlFor="price"
+              className="block text-xs md:text-sm font-semibold text-white mb-2"
+            >
+              Price (USD) *
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
+                errors.price
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-white/20 focus:ring-white/40"
+              }`}
+              placeholder="29.99"
+            />
+            {errors.price && (
+              <p className="text-red-400 text-xs md:text-sm mt-1">
+                {errors.price}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="originalPrice"
+              className="block text-xs md:text-sm font-semibold text-white mb-2"
+            >
+              Original Price (Optional)
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="originalPrice"
+              name="originalPrice"
+              value={formData.originalPrice}
+              onChange={handleChange}
+              className="w-full p-2 md:p-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/40 text-white placeholder-gray-500 text-sm md:text-base"
+              placeholder="39.99"
+            />
+            <p className="text-xs text-gray-400 mt-1">For showing discounts</p>
+          </div>
+        </div>
+
+        {/* Category and Stock Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <div>
+            <label
+              htmlFor="category"
+              className="block text-xs md:text-sm font-semibold text-white mb-2"
+            >
+              Category *
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white text-sm md:text-base ${
+                errors.category
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-white/20 focus:ring-white/40"
+              }`}
+            >
+              <option value="" className="bg-gray-900">
+                Select category
+              </option>
+              <option value="jewelry" className="bg-gray-900">
+                Jewelry
+              </option>
+              <option value="pottery" className="bg-gray-900">
+                Pottery
+              </option>
+              <option value="textiles" className="bg-gray-900">
+                Textiles
+              </option>
+              <option value="woodwork" className="bg-gray-900">
+                Woodwork
+              </option>
+              <option value="leather" className="bg-gray-900">
+                Leather Goods
+              </option>
+              <option value="paintings" className="bg-gray-900">
+                Paintings
+              </option>
+              <option value="mixed-materials" className="bg-gray-900">
+                Mixed Materials
+              </option>
+            </select>
+            {errors.category && (
+              <p className="text-red-400 text-xs md:text-sm mt-1">
+                {errors.category}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="stock"
+              className="block text-xs md:text-sm font-semibold text-white mb-2"
+            >
+              Stock Quantity *
+            </label>
+            <input
+              type="number"
+              id="stock"
+              name="stock"
+              value={formData.stock}
+              onChange={handleChange}
+              className={`w-full p-2 md:p-3 bg-white/5 border rounded-lg focus:outline-none focus:ring-2 text-white placeholder-gray-500 text-sm md:text-base ${
+                errors.stock
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-white/20 focus:ring-white/40"
+              }`}
+              placeholder="10"
+            />
+            {errors.stock && (
+              <p className="text-red-400 text-xs md:text-sm mt-1">
+                {errors.stock}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div>
+          <label
+            htmlFor="tags"
+            className="block text-xs md:text-sm font-semibold text-white mb-2"
+          >
+            Tags (Optional)
+          </label>
+          <input
+            type="text"
+            id="tags"
+            name="tags"
+            value={formData.tags}
+            onChange={handleChange}
+            className="w-full p-2 md:p-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/40 text-white placeholder-gray-500 text-sm md:text-base"
+            placeholder="handmade, ceramic, unique, gift"
+          />
+          <p className="text-xs text-gray-400 mt-1">
+            Separate tags with commas
+          </p>
+        </div>
+
+        <Button
+          type="submit"
+          variant="primary"
+          className="w-full py-3 md:py-4 text-base md:text-lg"
+        >
+          List Product Now
+        </Button>
+      </form>
     </div>
-  );
+  </div>
+);
+
+function Seller() {
+  const [activeTab, setActiveTab] = useState("dashboard");
+
+  // Mock data for dashboard
+  const [stats] = useState({
+    totalSales: 12450.75,
+    totalOrders: 89,
+    totalProducts: 15,
+    totalRevenue: 15680.25,
+    monthlyGrowth: 23.5,
+    weeklyGrowth: 8.2,
+  });
+
+  const [topProducts] = useState([
+    {
+      id: 1,
+      name: "Handmade Ceramic Vase",
+      sales: 45,
+      revenue: 675.0,
+      target: 50,
+      category: "Pottery",
+    },
+    {
+      id: 2,
+      name: "Artisan Wooden Bowl",
+      sales: 38,
+      revenue: 570.0,
+      target: 40,
+      category: "Woodwork",
+    },
+    {
+      id: 3,
+      name: "Macrame Wall Hanging",
+      sales: 32,
+      revenue: 480.0,
+      target: 35,
+      category: "Textiles",
+    },
+    {
+      id: 4,
+      name: "Leather Wallet",
+      sales: 28,
+      revenue: 420.0,
+      target: 30,
+      category: "Leather",
+    },
+  ]);
+
+  const [recentOrders] = useState([
+    {
+      id: "ORD-001",
+      customer: "Sarah Johnson",
+      product: "Handmade Ceramic Vase",
+      quantity: 2,
+      total: 45.0,
+      status: "Completed",
+      date: "2024-01-15",
+    },
+    {
+      id: "ORD-002",
+      customer: "Mike Chen",
+      product: "Artisan Wooden Bowl",
+      quantity: 1,
+      total: 35.0,
+      status: "Processing",
+      date: "2024-01-14",
+    },
+    {
+      id: "ORD-003",
+      customer: "Emma Wilson",
+      product: "Macrame Wall Hanging",
+      quantity: 1,
+      total: 28.0,
+      status: "Shipped",
+      date: "2024-01-13",
+    },
+    {
+      id: "ORD-004",
+      customer: "David Brown",
+      product: "Leather Wallet",
+      quantity: 3,
+      total: 75.0,
+      status: "Completed",
+      date: "2024-01-12",
+    },
+  ]);
+
+  const [monthlyData] = useState([
+    { month: "Jul", sales: 1200, orders: 12 },
+    { month: "Aug", sales: 1450, orders: 15 },
+    { month: "Sep", sales: 1800, orders: 18 },
+    { month: "Oct", sales: 2100, orders: 22 },
+    { month: "Nov", sales: 1950, orders: 20 },
+    { month: "Dec", sales: 2350, orders: 24 },
+  ]);
+
+  // Form data for selling
+  const [formData, setFormData] = useState({
+    productName: "",
+    description: "",
+    price: "",
+    originalPrice: "",
+    category: "",
+    stock: "",
+    tags: "",
+    images: null,
+  });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Completed":
+        return "bg-green-900/30 text-green-300 border-green-500/50";
+      case "Processing":
+        return "bg-yellow-900/30 text-yellow-300 border-yellow-500/50";
+      case "Shipped":
+        return "bg-blue-900/30 text-blue-300 border-blue-500/50";
+      default:
+        return "bg-gray-900/30 text-gray-300 border-gray-500/50";
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        images: file,
+      }));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.productName.trim()) {
+      newErrors.productName = "Product name is required";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Description is required";
+    } else if (formData.description.trim().length < 20) {
+      newErrors.description = "Please provide at least 20 characters";
+    }
+
+    if (!formData.price) {
+      newErrors.price = "Price is required";
+    } else if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
+      newErrors.price = "Please enter a valid price";
+    }
+
+    if (!formData.category) {
+      newErrors.category = "Please select a category";
+    }
+
+    if (!formData.stock) {
+      newErrors.stock = "Stock quantity is required";
+    } else if (isNaN(formData.stock) || parseInt(formData.stock) < 0) {
+      newErrors.stock = "Please enter a valid stock quantity";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newErrors = validateForm();
+
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Product listed:", formData);
+      setIsSubmitted(true);
+      setFormData({
+        productName: "",
+        description: "",
+        price: "",
+        originalPrice: "",
+        category: "",
+        stock: "",
+        tags: "",
+        images: null,
+      });
+      setImagePreview(null);
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } else {
+      setErrors(newErrors);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a]">
@@ -985,7 +1000,25 @@ function Seller() {
         </div>
 
         {/* Tab Content */}
-        {activeTab === "dashboard" ? <DashboardContent /> : <SellContent />}
+        {activeTab === "dashboard" ? (
+          <DashboardContent
+            stats={stats}
+            topProducts={topProducts}
+            recentOrders={recentOrders}
+            monthlyData={monthlyData}
+            getStatusColor={getStatusColor}
+          />
+        ) : (
+          <SellContent
+            formData={formData}
+            handleChange={handleChange}
+            handleImageChange={handleImageChange}
+            handleSubmit={handleSubmit}
+            errors={errors}
+            isSubmitted={isSubmitted}
+            imagePreview={imagePreview}
+          />
+        )}
       </div>
     </div>
   );
