@@ -7,7 +7,7 @@ import Cart from "./pages/cart";
 import NotFound from "./pages/notFound";
 import { CartProvider } from "./hooks/CartContext";
 import { ThemeProvider } from "./hooks/ThemeContext";
-import "./styles/app.css";
+import "./styles/App.css";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
