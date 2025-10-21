@@ -14,7 +14,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <div className="bg"></div>
       <Navbar />
       <div className="relative z-10">
@@ -122,7 +122,7 @@ function Home() {
               <InteractiveButton to="/products" variant="primary">
                 Shop Now
               </InteractiveButton>
-              <InteractiveButton to="/sell" variant="secondary">
+              <InteractiveButton to="/seller" variant="secondary">
                 Sell Your Craft
               </InteractiveButton>
             </div>

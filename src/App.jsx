@@ -7,6 +7,7 @@ import Cart from "./pages/cart";
 import NotFound from "./pages/notFound";
 import { CartProvider } from "./hooks/CartContext";
 import { ThemeProvider } from "./hooks/ThemeContext";
+import ScrollToTop from "./components/ScrollToTop";
 import "./styles/App.css";
 // Force rebuild
 import { Routes, Route } from "react-router-dom";
@@ -15,6 +16,7 @@ function App() {
   return (
     <ThemeProvider>
       <CartProvider>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />

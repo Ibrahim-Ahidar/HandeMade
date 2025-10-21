@@ -679,6 +679,8 @@ input[type="range"]::-moz-range-track {
 
   .bg {
     animation-range: 0 100vh;
+    height: 100%;
+    min-height: 100vh;
   }
 }
 /* scroll animation deleted */
