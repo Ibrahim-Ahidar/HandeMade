@@ -167,21 +167,37 @@ input[type="range"]::-moz-range-track {
 .dark .scrollbar-thin {
   scrollbar-color: #4b5563 transparent;
 }
-/* scroll animation deleted */
+/* Background Animation */
 .bg {
   position: fixed;      
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   z-index: -1;
   background: 
     url('../assets/imgs/home/background2.jpg') center/cover no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
   filter: brightness(1.1) saturate(1.2) blur(0px);
   opacity: 1;
-  animation: scroll-fade 1s linear both;
-  animation-timeline: scroll(root);     
-  animation-range: 0 150vh;           
+  /* Force hardware acceleration for iOS */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+  transform-origin: center center;
+}
+
+/* Scroll animation - only for browsers that support it */
+@supports (animation-timeline: scroll()) {
+  .bg {
+    animation: scroll-fade 1s linear both;
+    animation-timeline: scroll(root);     
+    animation-range: 0 150vh;
+  }
 }
 
 @keyframes scroll-fade {
@@ -228,15 +244,15 @@ input[type="range"]::-moz-range-track {
 
 #feature1 {
   margin-top: 60vh;
-  animation: slide-in-from-left 1s ease-out both;
+  animation: slide-in-from-left 1s linear both;
   animation-timeline: view();
-  animation-range: entry 0% cover 60%;
+  animation-range: entry 0% cover 50%;
 }
 
 #feature2 {
-  animation: slide-in-from-right 1s ease-out both;
+  animation: slide-in-from-right 1s linear both;
   animation-timeline: view();
-  animation-range: entry 0% cover 60%;
+  animation-range: entry 0% cover 50%;
 }
 
 /* Stats Section */
@@ -248,9 +264,9 @@ input[type="range"]::-moz-range-track {
   padding: 4rem 2rem;
   max-width: 1200px;
   opacity: 0;
-  animation: fade-scale-in 1s ease-out both;
+  animation: fade-scale-in 1s linear both;
   animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+  animation-range: entry 0% cover 40%;
 }
 
 .stat-card {
@@ -314,15 +330,15 @@ input[type="range"]::-moz-range-track {
 }
 
 #category1 {
-  animation: zoom-rotate-in 1s ease-out both;
+  animation: zoom-rotate-in 1s linear both;
   animation-timeline: view();
-  animation-range: entry 0% cover 35%;
+  animation-range: entry 0% cover 40%;
 }
 
 #category2 {
-  animation: zoom-rotate-in-reverse 1s ease-out both;
+  animation: zoom-rotate-in-reverse 1s linear both;
   animation-timeline: view();
-  animation-range: entry 0% cover 35%;
+  animation-range: entry 0% cover 40%;
 }
 
 /* Quote/Testimonial Card */
@@ -683,4 +699,3 @@ input[type="range"]::-moz-range-track {
     min-height: 100vh;
   }
 }
-/* scroll animation deleted */

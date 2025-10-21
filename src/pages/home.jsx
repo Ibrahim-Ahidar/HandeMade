@@ -5,6 +5,7 @@ import side1 from "../assets/imgs/home/side1.jpg";
 import side2 from "../assets/imgs/home/side2.jpg";
 import side3 from "../assets/imgs/home/side3.jpg";
 import side4 from "../assets/imgs/home/side4.jpg";
+import background from "../assets/imgs/home/background2.jpg";
 
 function Home() {
   const [visible, setVisible] = useState(false);
@@ -14,13 +15,29 @@ function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
-      <div className="bg"></div>
+    <div className="min-h-screen">
+      {/* Background with fallback img for iOS */}
+      <div className="bg">
+        <img
+          src={background}
+          alt=""
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            filter: "brightness(1.1) saturate(1.2)",
+            zIndex: -1,
+          }}
+        />
+      </div>
       <Navbar />
       <div className="relative z-10">
         {/* Hero Section */}
         <div
-          className={` flex flex-col transition-all duration-1000 ${
+          className={`flex flex-col transition-all duration-1000 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
