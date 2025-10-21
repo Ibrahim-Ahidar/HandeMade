@@ -699,7 +699,8 @@ input[type="range"]::-moz-range-track {
     font-size: 0.9rem;
   }
   #feature2{
-    margin-right: 90vh;
+    position: relative;
+    right: 4.5vh;
   }
   .scroll-category-card {
     display: none;
