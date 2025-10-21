@@ -656,6 +656,10 @@ input[type="range"]::-moz-range-track {
   .benefit-icon {
     font-size: 3rem;
   }
+  #feature2{
+    position: relative;
+    right: 2vh;
+  }
 }
 
 /* Extra small screens (phones below 640px) */
