@@ -5,8 +5,12 @@ body {
   margin: 0;
   padding: 0;
   background-color: #0a0a0a;
-  overflow-x: hidden;
   color: #ffffff;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 /* Theme backgrounds */
@@ -169,7 +173,7 @@ input[type="range"]::-moz-range-track {
 }
 /* Background Animation */
 .bg {
-  position: fixed;      
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -199,6 +203,8 @@ input[type="range"]::-moz-range-track {
     animation-range: 0 150vh;
   }
 }
+
+
 
 @keyframes scroll-fade {
   from {
@@ -510,6 +516,10 @@ input[type="range"]::-moz-range-track {
 
 /* Responsive Styles */
 @media (max-width: 1024px) {
+  body {
+    overflow-x: hidden;
+  }
+
   .scroll-feature-card {
     flex-direction: column;
     margin: 10vh auto;
@@ -555,6 +565,10 @@ input[type="range"]::-moz-range-track {
 }
 
 @media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
   .scroll-feature-card {
     margin: 8vh auto;
     padding: 1rem;
@@ -635,6 +649,10 @@ input[type="range"]::-moz-range-track {
 
 /* Extra small screens (phones below 640px) */
 @media (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
+
   .scroll-feature-card {
     margin: 6vh auto;
     padding: 0.75rem;
