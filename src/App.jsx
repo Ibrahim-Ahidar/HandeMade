@@ -8,6 +8,7 @@ import NotFound from "./pages/notFound";
 import { CartProvider } from "./hooks/CartContext";
 import { ThemeProvider } from "./hooks/ThemeContext";
 import "./styles/App.css";
+// Force rebuild
 import { Routes, Route } from "react-router-dom";
 
 function App() {
