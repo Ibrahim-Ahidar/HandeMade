@@ -15,7 +15,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ width: "100%", maxWidth: "100vw" }}>
       {/* Background with fallback img for iOS */}
       <div className="bg">
         <img

@@ -516,8 +516,15 @@ input[type="range"]::-moz-range-track {
 
 /* Responsive Styles */
 @media (max-width: 1024px) {
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
   body {
     overflow-x: hidden;
+    max-width: 100vw;
+    position: relative;
   }
 
   .scroll-feature-card {
@@ -565,8 +572,15 @@ input[type="range"]::-moz-range-track {
 }
 
 @media (max-width: 768px) {
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
   body {
     overflow-x: hidden;
+    max-width: 100vw;
+    position: relative;
   }
 
   .scroll-feature-card {
@@ -649,8 +663,15 @@ input[type="range"]::-moz-range-track {
 
 /* Extra small screens (phones below 640px) */
 @media (max-width: 640px) {
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
   body {
     overflow-x: hidden;
+    max-width: 100vw;
+    position: relative;
   }
 
   .scroll-feature-card {

@@ -15,16 +15,18 @@ function App() {
   return (
     <ThemeProvider>
       <CartProvider>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/seller" element={<Seller />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div style={{ width: "100%", maxWidth: "100vw" }}>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/seller" element={<Seller />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
       </CartProvider>
     </ThemeProvider>
   );
