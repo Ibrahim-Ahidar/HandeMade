@@ -546,8 +546,7 @@ input[type="range"]::-moz-range-track {
   }
 
   .scroll-category-card {
-    height: 300px;
-    margin: 15vh auto;
+    display: none;
   }
 
   .category-overlay {
@@ -621,9 +620,7 @@ input[type="range"]::-moz-range-track {
   }
 
   .scroll-category-card {
-    height: 250px;
-    margin: 10vh auto;
-    width: 95%;
+    display: none;
   }
 
   .category-overlay {
@@ -703,8 +700,7 @@ input[type="range"]::-moz-range-track {
   }
 
   .scroll-category-card {
-    height: 200px;
-    margin: 8vh auto;
+    display: none;
   }
 
   .category-overlay {
